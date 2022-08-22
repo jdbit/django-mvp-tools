@@ -1,0 +1,57 @@
+{% extends "comments/base.html" %}
+{% load i18n %}
+{% load comments_ink %}
+{% load static %}
+
+{% block head_title %}{% trans "Flag comment" %}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'django_comments_ink/css/reactions.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'modal.css' %}">
+{% endblock %}
+
+{% block content %}
+<article>
+    <div>
+        <h2>{% trans "Flag this comment?" %}</h2>
+        <h6>
+            {% trans "Comment left on" %} <a href="{{ comment.content_object.get_absolute_url }}">{{ comment.content_object }}</a>
+        </h6>
+    </div>
+    <div class="central-column">
+        <div class="dci pb32">
+            <div id="c{{ comment.id }}" class="comment-box my-3">
+                <div class="comment">
+                    <div class="header">
+                        <div>{% if comment.url and not comment.is_removed %}<a href="{{ comment.url }}" target="_new" class="fw-bolder">{{ comment.name }}</a>{% else %}<strong>{{ comment.name }}</strong>{% endif %}&nbsp;&sdot;&nbsp;<span class="text-muted small">{{ comment.submit_date }}</span>&nbsp;&nbsp;<a class="text-decoration-none small" title="comment permalink" href="{% get_inkcomment_permalink comment page_number %}">#</a></div>
+                    </div>
+                    <div class="p-2 border rounded">
+                        {{ comment.comment|linebreaksbr|escape }}
+                    </div>
+                    <div class="feedback">
+                        <div class="reactions">
+                            {% include "comments/comment_reactions.html" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section>
+                <p class="text-muted">{% trans "Click on the flag button to mark the following comment as inappropriate." %}</p>
+                <form action="." method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ comment.get_absolute_url }}"/>
+                    <div class="">
+                        <button type="submit" class="btn btn-primary" name="submit" value="flag">
+                            {% trans "Flag" %}
+                        </button>&nbsp;
+                        <a class="btn btn-secondary" href="{{ comment.get_absolute_url }}">
+                            {% trans "cancel" %}
+                        </a>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</article>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load i18n avatar_tags crispy_forms_tags %}
+
+{% block head_title %}Update profile{% endblock %}
+
+{% block extra_head %}
+<style>
+.container-profile {
+    max-width:800px;
+}
+</style>
+{% endblock %}
+
+{% block content_narrow %}
+<main class="container container-profile mb-5">
+    <div class="row">
+        <div class="col-sm-5 border-end mb-4">
+            <div class="text-center">
+                {% avatar request.user 256 class="rounded-circle img-responsive mb-3" %}
+                <h2 class="h5">{{ request.user.username }}</h2>
+                <a href="/avatar/change/" class="btn btn-outline-primary btn-sm">Change Avatar</a>
+                <a href="{% url 'user-profile' slug=request.user.username %}" class="btn btn-outline-secondary btn-sm">View Profile</a>
+            </div>
+        </div>
+        <div class="col-sm-7 ps-4">
+            <h1 class="h3 mb-3">Profile Settings</h1>
+            <form method="post" action="{% url 'edit-profile' %}">
+                {% csrf_token %}
+                {{ form|crispy }}
+                {% include 'snippets/message.html' %}
+                <div class="d-flex justify-content-between">
+                    <input type="submit" class="btn btn-primary btn-sm" value="Save">
+                    <div>
+                    <a href="{% url 'account_change_password' %}" class="btn btn-outline-primary btn-sm">Change Password</a>
+                    <a href="{% url 'account_email' %}" class="btn btn-outline-primary btn-sm">Change Email</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

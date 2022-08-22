@@ -1,0 +1,27 @@
+{% load i18n %}
+{% load comments %}
+{% load comments_ink %}
+
+<section class="reply-form active" data-dci="reply-form-{{ form.reply_ro.value }}">
+
+  {% if display_preview %}
+    <section class="comment-preview mb-4" data-dci="preview">
+      <div class="l0-ini">
+        {{ 0|indent_divs }}
+        <div class="comment">
+          <div class="header">
+              <div>{% if form.cleaned_data.url %}<a href="{{ form.cleaned_data.url }}" class="text-decoration-none" target="_new">{{ form.cleaned_data.name }}</a>{% else %}<span class="fw-bolder">{{ form.cleaned_data.name }}</span>{% endif %} <span class="badge text-bg-info">{% translate "comment in preview" %}</span></div>
+          </div>
+          <div class="border rounded p-2">
+            {{ form.cleaned_data.comment|linebreaks|escape }}
+          </div>
+          <div class="feedback feedback-bordered"></div>
+        </div>
+      </div>
+      <div class="not-reply-box l0"></div>
+    </section>
+  {% endif %}
+
+  {% include "comments/reply_form.html" %}
+
+</section>

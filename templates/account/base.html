@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style>
+.container-narrow {
+    max-width:400px;
+}
+.primaryAction {
+    @extend .btn;
+}
+</style>
+{% endblock %}
+
+{% block content_narrow %}
+    <main class="container container-narrow">
+        {% block content %}
+
+        {% endblock %}
+    </main>
+{% endblock %}

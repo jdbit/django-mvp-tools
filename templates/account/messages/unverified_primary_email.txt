@@ -1,0 +1,2 @@
+{% load i18n %}
+<div class="alert alert-danger" role="alert">{% blocktrans %}Your primary e-mail address must be verified.{% endblocktrans %}</div>

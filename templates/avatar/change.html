@@ -1,0 +1,34 @@
+{% extends "avatar/base.html" %}
+{% load i18n avatar_tags %}
+
+{% block extra_head %}
+<style>
+.container-avatar {
+    max-width:400px;
+}
+#id_avatar {
+    max-width:260px;
+}
+</style>
+{% endblock %}
+
+{% block head_title %}Change profile picture{% endblock %}
+
+{% block content_narrow %}
+<div class="container-avatar container mb-5">
+    <div class="text-center mb-3">
+        <h1 class="h3">Your Profile Picture</h1>
+        {% avatar user 256 class="rounded-circle img-responsive" %}
+    </div>
+    <form enctype="multipart/form-data" method="POST" action="{% url 'avatar_add' %}" class="mb-4">
+        <p class="mb-1 fw-bolder text-center">Upload new profile picture</p>
+        <div class="text-center">
+            <input type="file" name="avatar" class="form-control d-inline-block" accept="image/*" id="id_avatar" onchange='this.form.submit();'>
+        </div>
+        {% csrf_token %}
+    </form>
+    <p class="text-center">
+    <a href="{% url 'edit-profile' %}" class="btn btn-light">&larr; Back to profile settings</a>
+    </p>
+</div>
+{% endblock %}

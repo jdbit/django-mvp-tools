@@ -1,0 +1,20 @@
+{% load i18n %}
+{% load comments_ink %}
+
+<div id="top-comment-pagination" class="text-center my-3">
+  <span class="step-links">
+    {% if page_obj.has_previous %}
+      <a href="?{% render_qs_params page 1 %}#comments" class="btn btn-secondary btn-sm">{% trans "First" %}</a>
+      <a href="?{% render_qs_params page page_obj.previous_page_number %}#comments" class="btn btn-secondary btn-sm me-3">&laquo; {% trans "Previous" %}</a>
+    {% endif %}
+
+    <span class="text-muted">
+        {% blocktrans with page_number=page_obj.number num_pages=page_obj.paginator.num_pages %}Comments page <strong>{{ page_number }}</strong> of <strong>{{ num_pages }}</strong>{% endblocktrans %}
+    </span>
+
+    {% if page_obj.has_next %}
+      <a href="?{% render_qs_params page page_obj.next_page_number %}#comments" class="btn btn-secondary btn-sm ms-3">{% trans "Next" %} &raquo;</a>
+      <a href="?{% render_qs_params page page_obj.paginator.num_pages %}#comments" class="btn btn-secondary btn-sm">{% trans "Last" %}</a>
+    {% endif %}
+  </span>
+</div>

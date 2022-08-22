@@ -1,0 +1,2 @@
+{% load i18n %}
+<div class="alert alert-success" role="alert">{% blocktrans %}Primary e-mail address set.{% endblocktrans %}</div>

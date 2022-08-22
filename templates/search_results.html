@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block head_title %}{% if request.GET.q %}{{ request.GET.q }} &ndash; {% endif %}Search Results{% endblock %}
+
+{% block content %}
+{% if request.GET.q %}
+    <h1 class="h3 mb-3">Results for <strong class="text-primary">{{ request.GET.q }}</strong></h1>
+    {% include 'snippets/search_form.html' %}
+    {% for obj in object_list %}
+        <h2 class="h5 mb-1"><a href="{{ obj.get_absolute_url }}" class="text-decoration-none">{{ obj.title }}</a></h2>
+        <p class="text-muted mb-1">{{ obj.content|striptags|truncatewords:40 }}</p>
+        <p class="small text-muted">{{ obj.created_at|timesince }} ago</p>
+    {% empty %}
+        <p class="text-muted">Nothing found. Try different keywords.</p>
+    {% endfor %}
+    {% include 'snippets/pagination.html' with pages=page_obj %}
+{% else %}
+    <h1 class="h1 mb-3">Search</h1>
+    {% include 'snippets/search_form.html' %}
+{% endif %}
+{% endblock %}

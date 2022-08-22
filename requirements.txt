@@ -1,0 +1,10 @@
+django
+django_compressor
+django-crispy-forms
+crispy-bootstrap5
+django-taggit
+pillow
+django-browser-reload
+sorl-thumbnail
+django-newsletter
+django-honeypot

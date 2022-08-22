@@ -1,0 +1,24 @@
+{% load pagination %}
+{% if pages.paginator.num_pages != 1 %}
+<div class="mt-5 mb-5">
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if pages.has_previous %}
+            <li class="page-item"><a href="?{% update_page_number_in_url request 'page' 1 %}" class="page-link"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="16" height="16" viewBox="0 0 24 24" stroke-width="3" stroke="#407991" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/> <polyline points="15 6 9 12 15 18" /> </svg></a></li>
+            <li class="page-item"><a href="?{% update_page_number_in_url request 'page' pages.previous_page_number %}" class="page-link"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevrons-left" width="16" height="16" viewBox="0 0 24 24" stroke-width="3" stroke="#407991" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/> <polyline points="11 7 6 12 11 17" /> <polyline points="17 7 12 12 17 17" /> </svg></a></li>
+        {% endif %}
+        {% for i in pages.paginator.page_range %}
+            {% if pages.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+            {% elif i > pages.number|add:'-4' and i < pages.number|add:'4' %}
+                <li class="page-item"><a class="page-link" href="?{% update_page_number_in_url request 'page' i %}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if pages.has_next %}
+            <li class="page-item"><a href="?{% update_page_number_in_url request 'page' pages.next_page_number %}" class="page-link"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="16" height="16" viewBox="0 0 24 24" stroke-width="3" stroke="#407991" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/> <polyline points="9 6 15 12 9 18" /> </svg></a></li>
+            <li class="page-item"><a href="?{% update_page_number_in_url request 'page' pages.paginator.num_pages %}" class="page-link"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevrons-right" width="16" height="16" viewBox="0 0 24 24" stroke-width="3" stroke="#407991" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path stroke="none" d="M0 0h24v24H0z"/> <polyline points="7 7 12 12 7 17" /> <polyline points="13 7 18 12 13 17" /> </svg></a></li>
+        {% endif %}
+    </ul>
+</nav>
+</div>
+{% endif %}

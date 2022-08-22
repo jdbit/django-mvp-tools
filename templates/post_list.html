@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load static %}
+{% load comments %}
+{% load comments_ink %}
+{% load tags %}
+
+{% block head_title %}Latest posts{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <header class="mb-4">
+            <h1 class="fw-bolder mb-1">Latest posts</h1>
+        </header>
+        <!-- Featured blog post-->
+        {% with object_list|first as object %}
+        <div class="card mb-4">
+            <a href="{% url 'post-view' slug=object.slug %}">
+                {% thumbnail object.thumb "850x350" crop="center" as im %}
+                <img class="card-img-top h-auto" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ object.title }}">
+                {% endthumbnail %}
+            </a>
+            <div class="card-body">
+                <div class="small text-muted">{{ object.created_at|timesince }} ago</div>
+                <h2 class="card-title">{{ object.title }}</h2>
+                <p class="card-text">{{ object.content|striptags|truncatewords:40 }}</p>
+                <a class="btn btn-primary" href="{% url 'post-view' slug=object.slug %}">Read more →</a>
+            </div>
+        </div>
+        {% endwith %}
+        <!-- Nested row for non-featured blog posts-->
+        <div class="row">
+            {% for object in object_list|slice:"1:" %}
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <a href="{% url 'post-view' slug=object.slug %}">
+                        {% thumbnail object.thumb "700x350" crop="center" as im %}
+                        <img class="card-img-top h-auto" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ object.title }}">
+                        {% endthumbnail %}
+                    </a>
+                    <div class="card-body">
+                        <div class="small text-muted">{{ object.created_at|timesince }} ago</div>
+                        <h2 class="card-title h4">{{ object.title }}</h2>
+                        <p class="card-text">{{ object.content|striptags|truncatewords:30 }}</p>
+                        <a class="btn btn-primary" href="{% url 'post-view' slug=object.slug %}">Read more →</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% include 'snippets/pagination.html' with pages=page_obj %}
+    </div>
+    <!-- Side widgets-->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">Categories</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="#!">Web Design</a></li>
+                            <li><a href="#!">HTML</a></li>
+                            <li><a href="#!">Freebies</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="#!">JavaScript</a></li>
+                            <li><a href="#!">CSS</a></li>
+                            <li><a href="#!">Tutorials</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">Popular tags</div>
+            <div class="card-body">
+                {% popular_tags object 20 %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

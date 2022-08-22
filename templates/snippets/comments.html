@@ -1,0 +1,31 @@
+{% load i18n %}
+{% load comments %}
+{% load comments_ink %}
+<div class="{% dci_custom_selector %}">
+    <div class="text-center flex flex-justify-center">
+        {% render_object_reactions_form for object %}
+    </div>
+    <hr class="text-muted">
+    {% get_inkcomment_count for object as comment_count %}
+    {% if comment_count %}
+    <h5 class="mb-3">
+        {% blocktrans count comment_count=comment_count %}
+        {{ comment_count }} comment
+        {% plural %}
+        {{ comment_count }} comments
+        {% endblocktrans %}
+    </h5>
+    {% endif %}
+</div>
+
+{% if comment_count %}
+<div class="{% dci_custom_selector %} pb32">
+    {% render_inkcomment_list for object %}
+</div>
+{% endif %}
+
+<div class="{% dci_custom_selector %}" data-dci="comment-form">
+    <section>
+        {% render_inkcomment_form for object %}
+    </section>
+</div>

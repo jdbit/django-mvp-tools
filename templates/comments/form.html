@@ -1,0 +1,67 @@
+{% load i18n %}
+{% load comments %}
+
+<form method="POST" autocomplete="off" action="{% comment_form_target %}" class="mb-3" id="reply_form">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{% url 'comments-ink-sent' %}" />
+    {% for field in form %}
+    {% if field.is_hidden %}{{ field }}{% endif %}
+    {% endfor %}
+    {% if page_number %}
+    <input type="hidden" name="{{ comments_page_qs_param }}" value="{{ page_number }}" />
+    {% endif %}
+    <div class="d-none">{{ form.honeypot }}</div>
+
+    {% if 'comment' in form.errors %}
+    <div data-dci="comment-form-errors" class="col1-2 alert alert-error">{{ form.errors.comment }}</div>
+    {% else %}
+    <div data-dci="comment-form-errors" class="col1-2 d-none alert"></div>
+    {% endif %}
+
+    <div class="mb-1">
+        {{ form.comment }}
+    </div>
+
+    {% if not request.user.is_authenticated %}
+    <div class="d-none comment-user-info">
+        <div class="row mb-1">
+            <div class="col">
+                <label for="id_name" class="col1">{{ form.name.label }}</label>
+                <div class="col2 {% if 'name' in form.errors %}error{% endif %}">
+                    {{ form.name }}
+                </div>
+                {% if 'name' in form.errors %}
+                <div class="text-danger">{{ form.errors.name.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="col">
+                <label for="id_email" class="col1">{{ form.email.label }}</label>
+                <div class="col2 {% if 'email' in form.errors %}error{% endif %}">
+                    {{ form.email }}
+                </div>
+                {% if 'email' in form.errors %}
+                <div class="text-danger">{{ form.errors.email.0 }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="alert alert-info mt-2 mb-1" role="alert">{% url 'account_login' as login_url %}{% blocktrans %}A confirmation link will be sent to your email. Otherwise <a href="{{ login_url }}">login</a>.{% endblocktrans %}</div>
+    </div>
+    {% endif %}
+    <!--
+        {% if not request.user.is_authenticated %}
+        <label for="id_url" class="col1">{{ form.url.label }}</label>
+        <div class="col2 {% if 'url' in form.errors %}error{% endif %}">
+        {{ form.url }}
+        </div>
+        {% endif %}
+    -->
+
+    <div class="d-flex justify-content-between small">
+        <div class="form-check form-switch">
+            <input type="checkbox" name="followup" id="id_followup" class="form-check-input" {% if form.followup.value %}checked{% endif %}>
+            <label class="form-check-label" for="id_followup{% if cid %}_{{ cid }}{% endif %}">&nbsp;{{ form.followup.label }}</label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm me-1" name="post" value="1">{% trans 'Send' %}</button>
+        <button type="submit" class="btn btn-secondary btn-sm d-none" name="preview" value="1">{% trans 'Preview' %}</button>
+    </div>
+</form>

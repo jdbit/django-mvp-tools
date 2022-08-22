@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load static %}
+{% load comments %}
+{% load comments_ink %}
+{% load tags %}
+
+{% block head_title %}{{ object.title }}{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'django_comments_ink/css/reactions.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'modal.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <article>
+            <header class="mb-4">
+                <h1 class="fw-bolder mb-1">{{ object.title }}</h1>
+                <div class="text-muted fst-italic mb-2">{{ object.created_at|timesince }} ago by <a href="{% url 'user-profile' slug=object.created_by.username %}" class="fw-bolder text-decoration-none">{{ object.created_by }}</a></div>
+                {% for tag in object.tags.all %}
+                <a class="badge bg-secondary text-decoration-none link-light" href="{% url 'tag-view' slug=tag.slug %}">{{ tag.name }}</a>
+                {% endfor %}
+            </header>
+            <figure class="mb-4">
+                {% thumbnail object.thumb "900x400" crop="center" as im %}
+                <img class="img-fluid rounded" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ object.title }}">
+                {% endthumbnail %}
+            </figure>
+            <section class="mb-5">
+                {{ object.content|safe }}
+            </section>
+        </article>
+        <section class="mb-5">
+            {% include 'snippets/comments.html' %}
+        </section>
+    </div>
+    <!-- Side widgets-->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">Categories</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="#!">Web Design</a></li>
+                            <li><a href="#!">HTML</a></li>
+                            <li><a href="#!">Freebies</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="#!">JavaScript</a></li>
+                            <li><a href="#!">CSS</a></li>
+                            <li><a href="#!">Tutorials</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">Popular Tags</div>
+            <div class="card-body">
+                {% popular_tags object 20 %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% render_comment_reply_template for object %}
+{% render_comment_reactions_panel_template %}
+<section class="modal" id="list-reacted" data-modal-target>
+  <div class="modal__overlay" data-modal-close tabindex="-1"></div>
+  <div class="modal__wrapper"></div>
+</section>
+<script src="{% static 'django_comments_ink/dist/dci-0.3.0.js' %}"></script>
+<script src="{% static 'modal.js' %}"></script>
+{% endblock %}
